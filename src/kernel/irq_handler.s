@@ -6,7 +6,8 @@ keyboard_map_start:
 
 keyboard_map_end:
 
-irq_keyboard:
+irq1:                           ; keyboard
+        pusha
         xor ebx, ebx
         call get_cursor
         push ebx
@@ -28,10 +29,41 @@ irq_keyboard:
 .done:
         mov al, 0x20
         out 0x20, al
-        ret
+        popa
+        iret
 
-irq_mouse:
+irq12:                          ; mouse
+        pusha
         mov al, 0x20
         out 0xA0, al
         out 0x20, al
-        ret
+        popa
+        iret
+
+irq0:   
+irq2:
+irq3:
+irq4:
+irq5:
+irq6:
+irq7:
+        pusha
+        mov al, 0x20
+        out 0x20, al
+        popa
+        iret
+
+irq8:
+irq9:
+irq10:
+irq11:
+irq13:
+irq14:
+irq15:
+        pusha
+        mov al, 0x20
+        out 0xA0, al
+        mov al, 0x20
+        out 0x20, al
+        popa
+        iret

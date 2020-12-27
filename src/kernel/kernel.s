@@ -16,9 +16,6 @@ kmain:
         call print
 
         call newline
-        
-
-        call idt_init
 
         call get_cursor
         mov ecx, str
@@ -26,6 +23,8 @@ kmain:
         call print
 
         call newline
+
+        call idt_init
         jmp $
 
 str:    db "Hello, World!", 0
