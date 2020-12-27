@@ -12,7 +12,7 @@ popd
 
 pushd o:\build
 rem ld -o kernel.tmp skernel.obj kernel.obj
-ld -o kernel.tmp skernel.obj
+ld -Ttext 0x7e00 -T o:\misc\link.ld -o kernel.tmp skernel.obj
 objcopy -O binary kernel.tmp kernel.bin
 type bootsector.bin kernel.bin > image.bin
 rem start cmd /c gdb -ex "target remote localhost:1234" -x "symbol-file o:/build/kernel.obj"
