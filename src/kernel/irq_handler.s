@@ -30,7 +30,7 @@ irq_keyboard:
         out 0x20, al
         ret
 
-        irq_mouse:
+irq_mouse:
         mov al, 0x20
         out 0xA0, al
         out 0x20, al

@@ -8,19 +8,18 @@ main:
         mov sp, bp
 
         mov al, 0x33
+        mov ah, 0x2
         mov bx, KERNEL
-        call b16_disk_load
+        mov ch, 0x0
+        mov cl, 0x2
+        mov dh, 0x0
+        int 0x13
 
         call b16_switch_to_pm
         jmp $
 
-DRIVE_ID:
-        db 0
-
-%include "print.s"
-%include "disk.s"
 %include "gdt.s"
-
+        
 [bits 32]
 main_pm:
         call KERNEL

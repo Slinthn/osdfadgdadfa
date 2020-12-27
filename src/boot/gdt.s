@@ -1,3 +1,6 @@
+CODE_SEG equ gdt_code - gdt_start
+DATA_SEG equ gdt_data - gdt_start
+
 gdt_start:
 gdt_null:
         dd 0x0
@@ -23,9 +26,6 @@ gdt_end:
 gdt_descriptor:
         dw gdt_end - gdt_start - 1
         dd gdt_start
-
-CODE_SEG equ gdt_code - gdt_start
-DATA_SEG equ gdt_data - gdt_start
 
 [bits 16]
 b16_switch_to_pm:
