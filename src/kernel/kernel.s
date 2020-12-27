@@ -30,6 +30,5 @@ kmain:
 
 STR:    db "Hello, World!", 0
         
-%include "port.s"
 %include "irq.s"
 %include "screen.s"
