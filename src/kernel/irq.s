@@ -1,19 +1,5 @@
 %include "irq_handler.s"
 
-
-idt_descriptor:
-        dw idt_end - idt_start - 1
-        dd MEMORY(idt_start)
-
-        
-idt_start:
-        times 32 dq 0
-        times 16 dq 0x00008E0000080000
-        times (256 - 48) dq 0
-        
-idt_end:
-
-
 irq_list:
         dd MEMORY(irq0)
         dd MEMORY(irq1)
@@ -57,25 +43,69 @@ idt_init:
         out 0x21, al
         out 0xA1, al
 
-        mov ebx, 0
+        mov eax, esp
+        sub eax, 256*8 + 6
+        
+        push dword eax          ; push idt descriptor
+        push word 256*8
+        
+        sub esp, 256*8
+
+        mov byte[esp - 1], 0xFF
+        
         mov ecx, 0
-        mov edx, 0
-.fillmemory:
+.memloop0:                      ; fill first 32 entries with 0
+        mov [esp], dword 0
+        add esp, 4
+        mov [esp], dword 0
+        add esp, 4
+
+        inc ecx
+        cmp ecx, 32
+        jne .memloop0           ; end .memloop0
+
+        
+        mov ecx, 0
+.memloop1:                      ; fill 16 entries with pointers to irq functions
         mov ebx, ecx
         shl ebx, 2
         mov eax, [ebx + MEMORY(irq_list)]
 
-        shl ebx, 1
-        mov word[ebx + MEMORY(idt_start) + 32*8 + 0], ax
-        shr eax, 16
-        mov word[ebx + MEMORY(idt_start) + 32*8 + 6], ax
+        mov [esp], ax
+        add esp, 2
 
+        mov [esp], word 0x8
+        add esp, 2
+        
+        mov [esp], byte 0
+        add esp, 1
+
+        mov [esp], byte 0x8E
+        add esp, 1
+
+        shr eax, 16
+        mov [esp], ax
+        add esp, 2
+        
         inc ecx
         cmp ecx, 16
-        jne .fillmemory         ; end .fillmemory loop
+        jne .memloop1           ; end .memloop1
         
-        lidt [MEMORY(idt_descriptor)]
+        mov ecx, 0
+.memloop2:                      ; fill the rest of the 256 entries with 0
+        mov [esp], dword 0
+        add esp, 4
+        mov [esp], dword 0
+        add esp, 4
+
+        inc ecx
+        cmp ecx, (256-32-16)
+        jne .memloop2           ; end .memloop2
+
+        lidt [esp]
         sti
+
+        add esp, 6              ; pop idt descriptor
         
         mov al, 0xD4
         out 0x64, al
@@ -85,16 +115,15 @@ idt_init:
 .loop0:
         in al, 0x60
         cmp al, 0xFA
-        jne .loop0              ; end .loop0 loop
+        jne .loop0              ; end .loop0
 
 .loop1:        
         in al, 0x60
         cmp al, 0xFA
-        jne .loop1                 ; end loop1 loop
+        jne .loop1              ; end loop1
 
         mov al, 0x20
         out 0x64, al
-
 
         in al, 0x60
         or al, 0x2

@@ -4,11 +4,11 @@ VGA_HEIGHT equ 25
 MAX_CHARS equ VGA_WIDTH*VGA_HEIGHT
 VGA_TEXT equ 0xB8000            ; pointer to start of text output
         
-        ;; modifies : al, dx
+        ;; modifies : ax, dx
         ;; return bx : cursor offset
 get_cursor:        
         mov dx, 0x3D4
-        mov al, 0xE             ; request higher byte
+        mov ax, 0xE             ; request higher byte
         out dx, al
 
         inc dx
@@ -24,11 +24,11 @@ get_cursor:
         mov bl, al              ; move byte from al to lower byte of bh
         ret
 
-        ;; modifies : al, dx
+        ;; modifies : ax, dx
         ;; param bx : cursor offset
 set_cursor:        
         mov dx, 0x3D4
-        mov al, 0xE             ; output higher byte
+        mov ax, 0xE             ; output higher byte
         out dx, al
 
         inc dl
@@ -44,7 +44,7 @@ set_cursor:
         out dx, al              ; screen data port
         ret
 
-        ;; modifies : al, ebx, cx, dx
+        ;; modifies : ax, ebx, cx, dx
 clear:
         mov ebx, VGA_TEXT
         mov cx, MAX_CHARS
@@ -63,7 +63,7 @@ clear:
         call set_cursor
         ret
 
-        ;; modifies : al, ebx, dx
+        ;; modifies : ax, ebx, dx
         ;; param bx : cursor offset
         ;; param cl : character
         ;; param ch : attribute
@@ -76,7 +76,7 @@ printc:
         call set_cursor
         ret
 
-        ;; modifies : al, ebx, ecx, dx
+        ;; modifies : ax, ebx, ecx, dx
         ;; param bx : cursor offset
         ;; param ecx : pointer to null-terminated string
         ;; param dh : attrib
