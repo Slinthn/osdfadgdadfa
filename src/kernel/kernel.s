@@ -1,9 +1,3 @@
-%define MEMORY(x) (x - 0x401000 + 0x7E00)
-
-TMP:    dd 0
-;;; everything is fucked. newline does not work when setting eax register beforehand? irq is fucked? just... ugh
-;;; fixed ax regiser shit, still don't undersand y tho
-;;; nvm everything is ok now
 [bits 32]
 kmain:
         call clear
@@ -17,7 +11,7 @@ kmain:
         call newline
 
         call get_cursor
-        mov ecx, MEMORY(STR)
+        mov ecx, str
         mov dh, 0xE
         call print
 
@@ -27,14 +21,14 @@ kmain:
         call idt_init
 
         call get_cursor
-        mov ecx, MEMORY(STR)
+        mov ecx, str
         mov dh, 0xA
         call print
 
         call newline
         jmp $
 
-STR:    db "Hello, World!", 0
+str:    db "Hello, World!", 0
         
 %include "irq.s"
 %include "screen.s"

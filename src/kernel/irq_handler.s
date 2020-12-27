@@ -14,10 +14,10 @@ irq_keyboard:
         mov dx, 0x60
         in al, dx
 
-        mov ebx, MEMORY(keyboard_map_start)
+        mov ebx, keyboard_map_start
         add ebx, eax
         
-        cmp ebx, MEMORY(keyboard_map_end)
+        cmp ebx, keyboard_map_end
         mov cl, byte[ebx]
         pop ebx
         jg .done

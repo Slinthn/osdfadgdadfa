@@ -1,22 +1,22 @@
 %include "irq_handler.s"
 
 irq_list:
-        dd MEMORY(irq0)
-        dd MEMORY(irq1)
-        dd MEMORY(irq2)
-        dd MEMORY(irq3)
-        dd MEMORY(irq4)
-        dd MEMORY(irq5)
-        dd MEMORY(irq6)
-        dd MEMORY(irq7)
-        dd MEMORY(irq8)
-        dd MEMORY(irq9)
-        dd MEMORY(irq10)
-        dd MEMORY(irq11)
-        dd MEMORY(irq12)
-        dd MEMORY(irq13)
-        dd MEMORY(irq14)
-        dd MEMORY(irq15)
+        dd irq0
+        dd irq1
+        dd irq2
+        dd irq3
+        dd irq4
+        dd irq5
+        dd irq6
+        dd irq7
+        dd irq8
+        dd irq9
+        dd irq10
+        dd irq11
+        dd irq12
+        dd irq13
+        dd irq14
+        dd irq15
         
 idt_init:
         mov al, 0x11
@@ -69,7 +69,7 @@ idt_init:
 .memloop1:                      ; fill 16 entries with pointers to irq functions
         mov ebx, ecx
         shl ebx, 2
-        mov eax, [ebx + MEMORY(irq_list)]
+        mov eax, [ebx + irq_list]
 
         mov [esp], ax
         add esp, 2
