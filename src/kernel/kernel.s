@@ -1,33 +1,19 @@
-[bits 32]
+[bits 64]
 kmain:
-        call clear
-        mov ebx, 0
+  call clear
 
-        call get_cursor
-        mov cl, 'C'
-        mov ch, 0xA
-        call printc
+  mov bl, 0b1110
+  call set_cursor_state
 
-        call newline
+  mov ebx, 0
+  call get_cursor_position
+  mov ecx, HELLO_WORLD
+  mov dh, 0xD
+  call print
+  jmp $
 
-        call get_cursor
-        mov ecx, str
-        mov dh, 0xE
-        call print
 
-        call newline
+HELLO_WORLD:
+  db "Hello, world!", 0
 
-        call get_cursor
-        mov ecx, str
-        mov dh, 0xA
-        call print
-
-        call newline
-
-        call idt_init
-        jmp $
-
-str:    db "Hello, World!", 0
-        
-%include "irq.s"
 %include "screen.s"
